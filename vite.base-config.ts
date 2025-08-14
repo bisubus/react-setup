@@ -75,7 +75,9 @@ export default defineConfig((configEnv): UserConfig => {
       },
     },
     resolve: {
-      alias: [{ find: '@core', replacement: path.resolve(envParams.dirname, '../../packages/core/src') }],
+      alias: [
+        { find: '@core', replacement: path.resolve(envParams.dirname, '../../packages/core/src') },
+      ],
     },
     plugins: [
       vitePluginReact(),
@@ -97,7 +99,7 @@ export default defineConfig((configEnv): UserConfig => {
     test: {
       globals: true,
       environment: 'jsdom',
-      setupFiles: ['./vitest.setup.ts'],
+      setupFiles: [path.join(__dirname, './vitest.setup.ts')],
       include: ['src/**/__test__/**/*.ts?(x)', 'src/**/*.{test.ts?(x),test-d.ts}'],
     },
   } satisfies UserConfig;

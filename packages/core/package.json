@@ -10,6 +10,21 @@
     "url": "git+https://github.com/bisubus/react-setup.git"
   },
   "type": "module",
+  "main": "dist/react-setup-core.umd.min.js",
+  "module": "dist/react-setup-core.es.min.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/react-setup-core.es.min.js",
+      "require": "./dist/react-setup-core.umd.min.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc -b && vite build --emptyOutDir && vite build -- --minify",
     "fix": "eslint --fix .",
@@ -19,6 +34,7 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "react": ">= 16.8"
+    "react": ">= 16.8",
+    "react-dom": ">= 16.8"
   }
 }
