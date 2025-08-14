@@ -1,37 +1,34 @@
 import { useDebugValue, useRef } from 'react';
 
-import { setupHooksQueue } from '../_setupHooksQueue';
-import { isThenable } from '../utils/_isThenable';
-import type { TFn, TMaybePromise } from '../utils/_types';
-import { useConst } from './_useConst';
-import { usePromise } from './usePromise';
+import { setupHooksQueue } from '@core/_setupHooksQueue';
+import { useConst } from '@core/react-hooks/_useConst';
+import { isThenable } from '@core/utils/_isThenable';
+import type { TFn } from '@core/utils/types';
 
-export function useSetup<PInstance extends object>(
-  setupFn: () => TMaybePromise<PInstance>,
-): PInstance {
+export function useSetup<PInstance extends object>(setupFn: TFn<PInstance>): PInstance {
   const hooksQueueRef = useRef<TFn[] | null>(null);
 
   let isSetupPhase = false;
 
   const instance = useConst(() => {
-    let instance: TMaybePromise<PInstance>;
+    let instance: PInstance;
 
     isSetupPhase = true;
 
     try {
       setupHooksQueue.current = [];
       instance = setupFn();
+
+      if (isThenable(instance)) {
+        throw new Error('Async setup not supported');
+      }
+
       hooksQueueRef.current = setupHooksQueue.current;
     } finally {
       setupHooksQueue.current = null;
     }
 
-    if (isThenable(instance)) {
-      // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-      return usePromise(instance) as PInstance | never;
-    } else {
-      return instance;
-    }
+    return instance;
   });
 
   // Skip first render
