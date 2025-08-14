@@ -1,0 +1,4 @@
+{
+  "extends": "../../tsconfig.node.json",
+  "include": ["../../vitest.setup.ts", "../../scripts/**/*.ts", "vite.config.ts", "src/**/*.test.ts", "src/**/*.test.tsx"]
+}
