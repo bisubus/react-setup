@@ -1,11 +1,8 @@
 {
-  "extends": "./tsconfig.app.json",
+  "extends": "./tsconfig.base-app.json",
   "compilerOptions": {
     "allowJs": true
   },
-  "include": [
-    "src/**/*.ts", "src/**/*.tsx",
-    "eslint.config.js", "vite.config.ts", "vitest.setup.ts", "scripts/**/*.ts"
-  ],
+  "include": ["eslint.config.js", "vite.base-config.ts", "vitest.setup.ts", "scripts/**/*.ts"],
   "exclude": []
 }

@@ -18,7 +18,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 export default typescriptEslint.config(
   {
-    ignores: ['**/dist/**'],
+    ignores: ['dist/**', 'packages/**'],
   },
 
   ...typescriptEslint.config({
@@ -139,7 +139,20 @@ export default typescriptEslint.config(
       import: eslintPluginImport,
     },
     rules: {
-      'simple-import-sort/imports': 'error',
+      'simple-import-sort/imports': [
+        'error',
+        {
+          // Default settings with @core added to aliased imports group
+          groups: [
+            ['^\\u0000'], // Side effect imports.
+            ['^node:'], // Node.js builtins prefixed with `node:`
+            // ['^@?\\w'], // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
+            ['^(?!@core[/])@?\\w+'],
+            ['^'], // Absolute imports and other imports such as Vue-style `@/foo`.
+            ['^\\.'], // Relative imports
+          ],
+        },
+      ],
       'simple-import-sort/exports': 'error',
       'import/first': 'error',
       'import/newline-after-import': 'error',

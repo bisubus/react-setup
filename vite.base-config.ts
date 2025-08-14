@@ -1,3 +1,4 @@
+import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as url from 'node:url';
 
@@ -8,7 +9,6 @@ import vitePluginDts from 'vite-plugin-dts';
 import vitePluginNoBundle from 'vite-plugin-no-bundle';
 import { defineConfig, type UserConfig } from 'vitest/config';
 
-import packageJson from './package.json';
 import { getCliParams } from './scripts/vite/cli-params';
 import { viteMinifyBundlesPlugin } from './scripts/vite/plugin-minify-bundles';
 import { toKebabCase, toPascalCase } from './scripts/vite/utils';
@@ -16,17 +16,35 @@ import { toKebabCase, toPascalCase } from './scripts/vite/utils';
 type TCliParams = 'minify' | 'unbundled';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+
 const cliParams = getCliParams<TCliParams>(process.argv, true);
-const packageFilename = toKebabCase(packageJson.name);
-const packageNamespace = toPascalCase(packageJson.name);
+
 const bundleFormats: LibraryFormats[] = ['es', 'umd'];
 
+// Exposed to use in expanded configs
+export const envParams = {
+  dirname: __dirname,
+  isBuildMode: false,
+  isUnbundled: false,
+  isMinify: false,
+  isDts: false,
+  isDebugConfig: false,
+};
+
 export default defineConfig((configEnv): UserConfig => {
-  const isBuildMode = configEnv.command === 'build';
-  const isUnbundled = isBuildMode && cliParams.has('unbundled');
-  const isMinify = isBuildMode && !isUnbundled && cliParams.has('minify');
-  const isDts = isBuildMode;
-  const isDebugConfig = false;
+  envParams.isBuildMode = configEnv.command === 'build';
+  envParams.isUnbundled = envParams.isBuildMode && cliParams.has('unbundled');
+  envParams.isMinify = envParams.isBuildMode && !envParams.isUnbundled && cliParams.has('minify');
+  envParams.isDts = envParams.isBuildMode;
+  envParams.isDebugConfig = false;
+
+  const packageJsonPath = path.resolve(envParams.dirname, 'package.json');
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as Record<
+    string,
+    unknown
+  >;
+  const packageFilename = toKebabCase(packageJson.name as string);
+  const packageNamespace = toPascalCase(packageJson.name as string);
 
   const baseConfig = {
     base: './',
@@ -35,15 +53,15 @@ export default defineConfig((configEnv): UserConfig => {
       outDir: './dist',
       emptyOutDir: false,
       cssCodeSplit: false,
-      minify: isMinify ? 'terser' : false,
+      minify: envParams.isMinify ? 'terser' : false,
       terserOptions: {},
       sourcemap: true,
       lib: {
-        entry: path.resolve(__dirname, 'src/index.ts'),
+        entry: path.resolve(envParams.dirname, 'src/index.ts'),
         name: packageNamespace,
         formats: bundleFormats,
         fileName: ((format: LibraryFormats) => {
-          return `${packageFilename}.${format}${isMinify ? '.min' : ''}.js`;
+          return `${packageFilename}.${format}${envParams.isMinify ? '.min' : ''}.js`;
         }) as (format: ModuleFormat) => string,
       },
       rollupOptions: {
@@ -57,24 +75,24 @@ export default defineConfig((configEnv): UserConfig => {
       },
     },
     resolve: {
-      alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }],
+      alias: [{ find: '@core', replacement: path.resolve(envParams.dirname, '../../packages/core/src') }],
     },
     plugins: [
       vitePluginReact(),
-      isUnbundled && vitePluginNoBundle({ copy: '**/*.css' }),
-      isDts &&
+      envParams.isUnbundled && vitePluginNoBundle({ copy: '**/*.css' }),
+      envParams.isDts &&
         vitePluginDts({
           // https://github.com/qmhc/vite-plugin-dts#options
           // Workaround for composite tsconfig with "references"
-          tsconfigPath: path.resolve(__dirname, 'tsconfig.app.json'),
+          tsconfigPath: path.resolve(envParams.dirname, 'tsconfig.app.json'),
           // Allow side effect imports
           clearPureImport: false,
           // See https://api-extractor.com/pages/configs/api-extractor_json/#bundledpackages
           bundledPackages: [],
           // Output to package.json "types" location
-          rollupTypes: !isUnbundled,
+          rollupTypes: !envParams.isUnbundled,
         }),
-      isMinify && viteMinifyBundlesPlugin(),
+      envParams.isMinify && viteMinifyBundlesPlugin(),
     ],
     test: {
       globals: true,
@@ -87,7 +105,7 @@ export default defineConfig((configEnv): UserConfig => {
   let mergedConfig: UserConfig = baseConfig;
 
   // Unbundled ESM
-  if (isUnbundled) {
+  if (envParams.isUnbundled) {
     const unbundledConfig = {
       build: {
         outDir: './dist/es',
@@ -114,7 +132,7 @@ export default defineConfig((configEnv): UserConfig => {
     };
   }
 
-  if (isDebugConfig) {
+  if (envParams.isDebugConfig) {
     console.dir(mergedConfig, { depth: 4 });
   }
 

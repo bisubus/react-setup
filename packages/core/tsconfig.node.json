@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.node.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    // Prevent the use of @core alias inside the package
+    "paths": {}
+  },
+  "include": ["../../vitest.setup.ts", "../../scripts/**/*.ts", "vite.config.ts", "src/**/*.test.ts", "src/**/*.test.tsx"]
+}
