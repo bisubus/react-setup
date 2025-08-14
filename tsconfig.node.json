@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM"],
+    "types": ["vitest/globals"]
+  },
+  "include": ["vite.config.ts", "vitest.setup.ts", "scripts/**/*.ts", "src/**/*.test.ts", "src/**/*.test.tsx"]
+}
