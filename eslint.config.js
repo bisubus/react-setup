@@ -7,8 +7,6 @@ import typescriptEslintParser from '@typescript-eslint/parser';
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslintPluginReactDom from 'eslint-plugin-react-dom';
-import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
-import eslintPluginReactRefresh from 'eslint-plugin-react-refresh';
 import eslintPluginReactX from 'eslint-plugin-react-x';
 import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
@@ -103,20 +101,6 @@ export default typescriptEslint.config(
       '@typescript-eslint/return-await': 'error',
     },
   },
-
-  ...typescriptEslint.config({
-    extends: [eslintPluginReactHooks.configs['recommended-latest']],
-    rules: {
-      // https://www.npmjs.com/package/eslint-plugin-react-hooks
-    },
-  }),
-
-  ...typescriptEslint.config({
-    extends: [eslintPluginReactRefresh.configs.vite],
-    rules: {
-      // https://github.com/ArnaudBarre/eslint-plugin-react-refresh#options
-    },
-  }),
 
   ...typescriptEslint.config({
     extends: [eslintPluginReactX.configs.recommended],
