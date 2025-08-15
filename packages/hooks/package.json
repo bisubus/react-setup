@@ -26,7 +26,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc -b && vite build --emptyOutDir && vite build -- --minify",
+    "build": "tsc -b tsconfig.app.json && vite build --emptyOutDir && vite build -- --minify",
     "fix": "eslint --fix .",
     "lint": "eslint .",
     "test": "tsc --noEmit -p tsconfig.test.json && vitest --typecheck --run",
