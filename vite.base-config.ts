@@ -65,14 +65,19 @@ export default defineConfig((configEnv): UserConfig => {
         }) as (format: ModuleFormat) => string,
       },
       rollupOptions: {
-        external: ['react', 'react-dom'],
+        external: ['react', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'react-dom'],
         output: {
           globals: {
             react: 'React',
+            'react/jsx-runtime': 'React',
+            'react/jsx-dev-runtime': 'React',
             'react-dom': 'ReactDOM',
           },
         },
       },
+    },
+    optimizeDeps: {
+      exclude: ['react/jsx-runtime', 'react/jsx-dev-runtime'],
     },
     resolve: {
       alias: [
