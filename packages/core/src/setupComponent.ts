@@ -1,4 +1,5 @@
 import {
+  createElement as h,
   type FunctionComponent,
   memo,
   type NamedExoticComponent,
@@ -114,11 +115,14 @@ export function setupComponent<
         }
 
         renderFn = ((props: PProps) => {
+          /*
           return (
             <Suspense>
               <RenderComponent {...props} />
             </Suspense>
           );
+*/
+          return h(Suspense, null, h(RenderComponent, props));
         }) as TSetupComponentRenderFn<PProps>;
       } else {
         renderFn = result as TSetupComponentRenderFn<PProps>;
