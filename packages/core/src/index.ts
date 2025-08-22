@@ -21,6 +21,12 @@ export * from './setup-hooks/setupRefHook';
 // Public util functions
 export * from './utils/createObjProxy';
 export * from './utils/createRefLike';
+export {
+  writableRefSymbol as _writableRefSymbol,
+  createWritableRef,
+  isWritableRef,
+  type TWritableRef,
+} from './utils/createWritableRef';
 export * from './utils/isRef';
 export * from './utils/unref';
 

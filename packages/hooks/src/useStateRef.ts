@@ -1,4 +1,9 @@
-import { _useConst as useConst, _useSyncRef as useSyncRef } from '@react-setup/core';
+import {
+  _useConst as useConst,
+  _useSyncRef as useSyncRef,
+  _writableRefSymbol as writableRefSymbol,
+  type TWritableRef,
+} from '@react-setup/core';
 import { type Dispatch, type SetStateAction, useState } from 'react';
 
 import type { TRef } from '@core/utils/types';
@@ -15,7 +20,7 @@ function useRefFromState<T>(
   const stateRef = useSyncRef(state);
 
   const stateWritableRef = useConst(() => {
-    const ref: TRef<T> = {
+    const ref = {
       get current(): T {
         return stateRef.current;
       },
@@ -36,7 +41,9 @@ function useRefFromState<T>(
           setState(nextState);
         }
       },
-    };
+    } as TWritableRef<T> as TRef<T>;
+
+    Object.defineProperty(ref, writableRefSymbol, { value: true, configurable: true });
 
     return ref;
   });

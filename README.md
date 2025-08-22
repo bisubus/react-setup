@@ -456,7 +456,9 @@ Utility functions:
 
 - `createObjProxy`
 - `createRefLike`
+- `createWritableRef`
 - `isRef`
+- `isWritableRef`
 - `unref`
 
 Utility types:
@@ -464,13 +466,14 @@ Utility types:
 - `TMaybeRef`
 - `TReadonlyRef`
 - `TRef`
+- `TWritableRef`
 
 ### `@react-setup/hooks`
 
 Additional React hooks and their setup hook counterparts:
 
 | React hook                | Setup hook                    |
-|---------------------------|-------------------------------|
+|-----------------|-------------------------------|
 | `useAsyncEffect`          | `setupEffect` (core)          |
 | `useAsyncInsertionEffect` | `setupInsertionEffect` (core) |
 | `useAsyncLayoutEffect`    | `setupLayoutEffect` (core)    |
