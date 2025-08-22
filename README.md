@@ -454,6 +454,7 @@ Setup helpers:
 
 Utility functions:
 
+- `cloneRef`
 - `createObjProxy`
 - `createRefLike`
 - `createWritableRef`

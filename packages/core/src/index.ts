@@ -19,6 +19,7 @@ export * from './setup-hooks/setupRef';
 export * from './setup-hooks/setupRefHook';
 
 // Public util functions
+export * from './utils/cloneRef';
 export * from './utils/createObjProxy';
 export * from './utils/createRefLike';
 export {
