@@ -4,7 +4,7 @@ import * as url from 'node:url';
 
 import vitePluginReact from '@vitejs/plugin-react';
 import type { ModuleFormat } from 'rollup';
-import type { LibraryFormats, LibraryOptions } from 'vite';
+import type { LibraryFormats, LibraryOptions, TerserOptions } from 'vite';
 import vitePluginDts from 'vite-plugin-dts';
 import vitePluginNoBundle from 'vite-plugin-no-bundle';
 import { defineConfig, type UserConfig } from 'vitest/config';
@@ -29,6 +29,7 @@ export const envParams = {
   isMinify: false,
   isDts: false,
   isDebugConfig: false,
+  terserOptions: {} as TerserOptions,
 };
 
 export default defineConfig((configEnv): UserConfig => {
@@ -54,7 +55,7 @@ export default defineConfig((configEnv): UserConfig => {
       emptyOutDir: false,
       cssCodeSplit: false,
       minify: envParams.isMinify ? 'terser' : false,
-      terserOptions: {},
+      terserOptions: envParams.terserOptions,
       sourcemap: true,
       lib: {
         entry: path.resolve(envParams.dirname, 'src/index.ts'),
@@ -99,7 +100,7 @@ export default defineConfig((configEnv): UserConfig => {
           // Output to package.json "types" location
           rollupTypes: !envParams.isUnbundled,
         }),
-      envParams.isMinify && viteMinifyBundlesPlugin(),
+      envParams.isMinify && viteMinifyBundlesPlugin(envParams.terserOptions),
     ],
     test: {
       globals: true,

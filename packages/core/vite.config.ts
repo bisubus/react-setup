@@ -8,6 +8,19 @@ import getBaseConfig, { envParams } from '../../vite.base-config';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 envParams.dirname = __dirname;
+envParams.terserOptions = {
+  mangle: {
+    reserved: ['runHook'],
+  },
+  /*
+  compress: {
+    keep_fnames: true,
+  },
+  mangle: {
+    keep_fnames: true,
+  },
+*/
+};
 
 export default defineConfig((configEnv) => {
   const baseConfig = getBaseConfig(configEnv);
