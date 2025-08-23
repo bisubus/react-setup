@@ -1,5 +1,7 @@
 import type { EffectCallback, RefObject } from 'react';
 
+import type { writableRefSymbol } from './createWritableRef';
+
 export type TPlainObj = Record<string, unknown>;
 
 export type TFn<T = unknown> = (...args: unknown[]) => T;
@@ -13,6 +15,8 @@ export type TMaybeRef<T = unknown> = T extends RefObject<T> ? RefObject<T> : T;
 export interface TReadonlyRef<T> {
   readonly current: T;
 }
+
+export type TWritableRef<T = unknown> = TRef<T> & { [writableRefSymbol]: true };
 
 export type TAsyncEffectCallback = EffectCallback | (() => PromiseLike<void>);
 

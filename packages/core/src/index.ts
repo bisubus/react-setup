@@ -25,11 +25,10 @@ export * from './utils/createRefLike';
 export {
   writableRefSymbol as _writableRefSymbol,
   createWritableRef,
-  isWritableRef,
-  type TWritableRef,
 } from './utils/createWritableRef';
 export * from './utils/isRef';
+export * from './utils/isWritableRef';
 export * from './utils/unref';
 
 // Public util types
-export type { TMaybeRef, TReadonlyRef, TRef } from './utils/types';
+export type { TMaybeRef, TReadonlyRef, TRef, TWritableRef } from './utils/types';

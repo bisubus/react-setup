@@ -1,9 +1,6 @@
-import { isObject } from './_isObject';
-import type { TRef } from './types';
+import type { TWritableRef } from './types';
 
 export const writableRefSymbol = Symbol('WRITABLE_REF');
-
-export type TWritableRef<T = unknown> = TRef<T> & { [writableRefSymbol]: true };
 
 export function createWritableRef<PValue, PSetValue = PValue>(
   get: () => PValue,
@@ -21,14 +18,4 @@ export function createWritableRef<PValue, PSetValue = PValue>(
   Object.defineProperty(ref, writableRefSymbol, { value: true, configurable: true });
 
   return ref as TWritableRef<PValue>;
-}
-
-type TIsWritableRef<T> = T extends TRef<unknown> ? T : never;
-
-export function isWritableRef<T>(value: T): value is TIsWritableRef<T> {
-  return (
-    isObject(value) &&
-    (value as Record<string | symbol, unknown>)[writableRefSymbol] === true &&
-    'current' in value
-  );
 }
