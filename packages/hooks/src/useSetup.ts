@@ -1,7 +1,6 @@
+import { _setupHooksQueue as setupHooksQueue, _useConst as useConst } from '@react-setup/core';
 import { useDebugValue, useRef } from 'react';
 
-import { setupHooksQueue } from '@core/_setupHooksQueue';
-import { useConst } from '@core/react-hooks/_useConst';
 import { isThenable } from '@core/utils/_isThenable';
 import type { TFn } from '@core/utils/types';
 
