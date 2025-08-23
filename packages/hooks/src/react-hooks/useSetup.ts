@@ -1,8 +1,8 @@
 import { _setupHooksQueue as setupHooksQueue, _useConst as useConst } from '@react-setup/core';
 import { useDebugValue, useRef } from 'react';
 
-import { isThenable } from '@core/utils/_isThenable';
-import type { TFn } from '@core/utils/types';
+import { isThenable } from '@core/_utils/_isThenable';
+import type { TFn } from '@core/_utils/types';
 
 export function useSetup<PInstance extends object>(setupFn: TFn<PInstance>): PInstance {
   const hooksQueueRef = useRef<TFn[] | null>(null);

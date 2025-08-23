@@ -2,14 +2,14 @@
 export * from './setupComponent';
 
 // Private React hooks to use in hooks package
-export { useAsyncEffect as _useAsyncEffect } from './react-hooks/_useAsyncEffect';
-export { useAsyncInsertionEffect as _useAsyncInsertionEffect } from './react-hooks/_useAsyncInsertionEffect';
-export { useAsyncLayoutEffect as _useAsyncLayoutEffect } from './react-hooks/_useAsyncLayoutEffect';
-export { useConst as _useConst } from './react-hooks/_useConst';
-export { useConstProps as _useConstProps } from './react-hooks/_useConstProps';
-export { useContext as _useContext } from './react-hooks/_useContext';
-export { usePromise as _usePromise } from './react-hooks/_usePromise';
-export { useSyncRef as _useSyncRef } from './react-hooks/_useSyncRef';
+export { useContext as _useContext } from './_react-hooks/_useContext';
+export { useAsyncEffect as _useAsyncEffect } from './_react-hooks/useAsyncEffect';
+export { useAsyncInsertionEffect as _useAsyncInsertionEffect } from './_react-hooks/useAsyncInsertionEffect';
+export { useAsyncLayoutEffect as _useAsyncLayoutEffect } from './_react-hooks/useAsyncLayoutEffect';
+export { useConst as _useConst } from './_react-hooks/useConst';
+export { useConstProps as _useConstProps } from './_react-hooks/useConstProps';
+export { usePromise as _usePromise } from './_react-hooks/usePromise';
+export { useSyncRef as _useSyncRef } from './_react-hooks/useSyncRef';
 
 // Public setup hooks
 export * from './setup-hooks/builtin';
@@ -18,18 +18,20 @@ export * from './setup-hooks/setupPromise';
 export * from './setup-hooks/setupRef';
 export * from './setup-hooks/setupRefHook';
 
-// Public util functions
-export * from './utils/cloneRef';
-export * from './utils/createObjProxy';
-export * from './utils/createRefLike';
+// Private utils to use in utils package
+export { createObjProxy as _createObjProxy } from './_utils/createObjProxy';
+export { createRefLike as _createRefLike } from './_utils/createRefLike';
 export {
+  createWritableRef as _createWritableRef,
   writableRefSymbol as _writableRefSymbol,
-  createWritableRef,
-} from './utils/createWritableRef';
-export * from './utils/isRef';
-export * from './utils/isStrictRef';
-export * from './utils/isWritableRef';
-export * from './utils/unref';
+} from './_utils/createWritableRef';
+export { isRef as _isRef } from './_utils/isRef';
+export { unref as _unref } from './_utils/unref';
 
-// Public util types
-export type { TMaybeRef, TReadonlyRef, TRef, TWritableRef } from './utils/types';
+// Private util types to use in utils package
+export type {
+  TMaybeRef as _TMaybeRef,
+  TReadonlyRef as _TReadonlyRef,
+  TRef as _TRef,
+  TWritableRef as _TWritableRef,
+} from './_utils/types';

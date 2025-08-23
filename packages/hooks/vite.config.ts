@@ -19,7 +19,7 @@ export default defineConfig((configEnv) => {
           globals: {
             react: 'React',
             'react-dom': 'ReactDOM',
-            '@react-setup/core': 'ReactSetupCore',
+            '@react-setup/core': 'ReactSetupCore'
           },
         },
       },

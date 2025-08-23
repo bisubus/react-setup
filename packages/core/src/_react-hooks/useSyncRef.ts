@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import type { TRef } from '../utils/types';
+import type { TRef } from '../_utils/types';
 
 // A ref that keeps the reference to the latest value
 export function useSyncRef<T>(value: T): TRef<T> {

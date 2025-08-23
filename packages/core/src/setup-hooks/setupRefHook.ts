@@ -1,9 +1,9 @@
+import { useSyncRef } from '../_react-hooks/useSyncRef';
 import { setupHooksQueue } from '../_setupHooksQueue';
-import { useSyncRef } from '../react-hooks/_useSyncRef';
-import { checkSetupHooks } from '../utils/_checkSetupHooks';
-import { isObject } from '../utils/_isObject';
-import { createObjProxy, type ICreateObjProxyOptions } from '../utils/createObjProxy';
-import type { TFn, TRef } from '../utils/types';
+import { checkSetupHooks } from '../_utils/_checkSetupHooks';
+import { isObject } from '../_utils/_isObject';
+import { createObjProxy, type ICreateObjProxyOptions } from '../_utils/createObjProxy';
+import type { TFn, TRef } from '../_utils/types';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ISetupHookOptions extends ICreateObjProxyOptions {}

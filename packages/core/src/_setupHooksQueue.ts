@@ -1,4 +1,4 @@
-import { createRefLike } from './utils/createRefLike';
-import type { TFn } from './utils/types';
+import { createRefLike } from './_utils/createRefLike';
+import type { TFn } from './_utils/types';
 
 export const setupHooksQueue = createRefLike<TFn[] | null>(null);

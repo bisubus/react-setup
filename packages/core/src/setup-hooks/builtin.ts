@@ -19,13 +19,13 @@ import {
 } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { useAsyncEffect } from '../react-hooks/_useAsyncEffect';
-import { useAsyncInsertionEffect } from '../react-hooks/_useAsyncInsertionEffect';
-import { useAsyncLayoutEffect } from '../react-hooks/_useAsyncLayoutEffect';
-import { useContext } from '../react-hooks/_useContext';
-import { useSyncRef } from '../react-hooks/_useSyncRef';
-import { unwrapSetupDeps } from '../utils/_unwrapSetupDeps';
-import { isRef } from '../utils/isRef';
+import { useContext } from '../_react-hooks/_useContext';
+import { useAsyncEffect } from '../_react-hooks/useAsyncEffect';
+import { useAsyncInsertionEffect } from '../_react-hooks/useAsyncInsertionEffect';
+import { useAsyncLayoutEffect } from '../_react-hooks/useAsyncLayoutEffect';
+import { useSyncRef } from '../_react-hooks/useSyncRef';
+import { unwrapSetupDeps } from '../_utils/_unwrapSetupDeps';
+import { isRef } from '../_utils/isRef';
 import type {
   TAsyncEffectCallback,
   TFn,
@@ -33,8 +33,8 @@ import type {
   TMaybeRef,
   TReadonlyRef,
   TRef,
-} from '../utils/types';
-import { unref } from '../utils/unref';
+} from '../_utils/types';
+import { unref } from '../_utils/unref';
 import { setupHook } from './setupHook';
 import { setupRefHook } from './setupRefHook';
 

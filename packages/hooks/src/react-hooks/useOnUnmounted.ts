@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import type { TAsyncLifecycleCallback } from './_types';
+import type { TAsyncLifecycleCallback } from '../utils/_types';
 
 export function useOnUnmounted(callback: TAsyncLifecycleCallback) {
   const pendingCleanupCount = useRef(0);

@@ -1,12 +1,12 @@
 import {
+  type _TWritableRef as TWritableRef,
   _useConst as useConst,
   _useSyncRef as useSyncRef,
   _writableRefSymbol as writableRefSymbol,
-  type TWritableRef,
 } from '@react-setup/core';
 import { type Dispatch, type SetStateAction, useState } from 'react';
 
-import type { TRef } from '@core/utils/types';
+import type { TRef } from '@core/_utils/types';
 
 interface IUseStateRefOptions {
   unsync?: boolean;

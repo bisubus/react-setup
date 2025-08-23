@@ -8,13 +8,13 @@ import {
   useRef,
 } from 'react';
 
+import { useConst } from './_react-hooks/useConst';
+import { useConstProps } from './_react-hooks/useConstProps';
+import { usePromise } from './_react-hooks/usePromise';
+import { useSyncRef } from './_react-hooks/useSyncRef';
 import { setupHooksQueue } from './_setupHooksQueue';
-import { useConst } from './react-hooks/_useConst';
-import { useConstProps } from './react-hooks/_useConstProps';
-import { usePromise } from './react-hooks/_usePromise';
-import { useSyncRef } from './react-hooks/_useSyncRef';
-import { isThenable } from './utils/_isThenable';
-import type { TFn, TMaybePromise, TReadonlyRef } from './utils/types';
+import { isThenable } from './_utils/_isThenable';
+import type { TFn, TMaybePromise, TReadonlyRef } from './_utils/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 type TSetupComponentRenderFn<PProps> = <PProps>(props?: PProps) => ReactNode;

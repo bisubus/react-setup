@@ -163,8 +163,8 @@ npm install @react-setup/core @react-setup/hooks
 ### Example
 
 ```jsx
-import { setupComponent, setupEffect, unref } from '@react-setup/core';
-import { setupStateRef } from '@react-setup/hooks';
+import { setupComponent, setupEffect } from '@react-setup/core';
+import { setupStateRef, unref } from '@react-setup/hooks';
 
 export default setupComponent(function Count(props) {
   const count = setupStateRef(0);
@@ -455,23 +455,6 @@ Setup helpers:
 - `setupHook`
 - `setupRefHook`
 
-Utility functions:
-
-- `cloneRef`
-- `createObjProxy`
-- `createRefLike`
-- `createWritableRef`
-- `isRef`
-- `isWritableRef`
-- `unref`
-
-Utility types:
-
-- `TMaybeRef`
-- `TReadonlyRef`
-- `TRef`
-- `TWritableRef`
-
 ### `@react-setup/hooks`
 
 Additional React hooks and their setup hook counterparts:
@@ -491,6 +474,24 @@ Additional React hooks and their setup hook counterparts:
 | `useSetup`                | ✖ Not needed                  |
 | `useStateRef`             | `setupStateRef`               |
 | `useSyncRef`              | ✖ Not needed                  |
+
+Utility functions:
+
+- `cloneRef`
+- `createObjProxy`
+- `createRefLike`
+- `createWritableRef`
+- `isRef`
+- `isStrictRef`
+- `isWritableRef`
+- `unref`
+
+Utility types:
+
+- `TMaybeRef`
+- `TReadonlyRef`
+- `TRef`
+- `TWritableRef`
 
 ---
 
