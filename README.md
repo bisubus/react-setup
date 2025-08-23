@@ -11,6 +11,8 @@ React Setup is a collection of hooks and helpers for better DX and component dec
 
 Overreacting? Tired of jumping through hooks? The library provides instant relief even from severe hook fatigue. This can be considered a lesson in component design learned by React from Vue, Solid, Svelte and other modern frameworks.
 
+---
+
 ## Description
 
 Code is worth a thousand words.
@@ -39,14 +41,18 @@ const Heroes = props => {
   useEffect(() => {
     (async () => {
       const newHero = await getHero(props.newId, heroes?.missing);
-      setHeroes(heroes => ([...heroes, newHero])); // 🥱
-
-      if (noSuper(heroes)) {
-        const newHero = await getSuperHero(gadgets.current);
-        setHeroes(heroes => [...heroes, newHero]); // 😴
-      }
+      setHeroes(prev => [...prev, newHero]); // 🥱
     })(); // 😣
-  }, [props.newId, heroes]); // 😓
+  }, [props.newId]);
+
+  useEffect(() => {
+    if (noSuper(heroes)) {
+      (async () => {
+        const newHero = await getSuperHero();
+        setHeroes(prev => [...prev, newHero]);  // 😴
+      })(); // 😵
+    }
+  }, [heroes]); // 😓
 
   const disastersPromise = useMemo(() => villains.getDisasters(), []); // 😟
   const [disasters, setDisasters] = useState();
@@ -92,7 +98,7 @@ const Heroes = setupComponent(async props => { // Props object is a stable reado
 
   setupOnUnmounted(() => removeGadgets()); // A cleanup paired with mounted hook 
 
-  setupEffect(async () => { // No AIIFE, can return a promise if no cleanup
+  setupEffect(async () => { // One effect with no AIIFE, can return a promise if no cleanup
     const newHero = await getHero(props.newId, unref(heroes)?.missing); // Omit .current
     heroes.current = heroes => [...heroes, newHero]; // Supports a setter but doesn't need it
 
@@ -144,6 +150,8 @@ The library's goal is to reintroduce instance-like semantics to functional compo
 - Astro frontmatter (blocks with top-level `await`)
 - React own RSC (blocks with `async/await`) 
 
+---
+
 ## Usage
 
 ### Installation
@@ -169,6 +177,8 @@ export default setupComponent(function Count(props) {
   return () => <p>{unref(count)}</p>;
 });
 ```
+
+---
 
 ## How It Works
 
@@ -292,26 +302,17 @@ const UserProfile = props => {
 
 ### Synchronous Setup
 
-Without suspense, there is no need for additional `Render` component. Elements from a render function are returned as is.
+Works similarly to async setup until the first `await`. Without suspense, there is no need for additional `Render` component. Elements from a render function are returned as is.
 
 Component with synchronous setup:
 
 ```jsx
 const UserProfile = setupComponent(props => {
   // 1. Promise setup hooks
-  const users = setupPromise(usersService.usersPromise);
+  // ...
 
   // 2. Other setup hooks and variables
-  const companyInfoRef = setupContext(CompanyInfoContext);
-
-  const currentUserRef = setupMemo(() => users.find(user => user.id === props.id), [() => props.id]);
-
-  const [detailsRef, setDetails] = setupState();
-
-  setupEffect(async () => {
-    const details = await usersService.getDetails(props.id)
-    setDetails(details);
-  }, [() => props.id]);
+  // ...
 
   console.log('Logged on instantiation');
   const totalMessage = translate('Total');
@@ -417,6 +418,8 @@ They can wrap React hooks for use inside `setupComponent` or `useSetup`. They qu
 
 All setup hooks from core package are React hooks wrapped with `setupHook` and `setupRefHook`, with parameters and return values adapted to the setup phase.
 
+---
+
 ## API
 
 ### `@react-setup/core`
@@ -474,7 +477,7 @@ Utility types:
 Additional React hooks and their setup hook counterparts:
 
 | React hook                | Setup hook                    |
-|-----------------|-------------------------------|
+|---------------------------|-------------------------------|
 | `useAsyncEffect`          | `setupEffect` (core)          |
 | `useAsyncInsertionEffect` | `setupInsertionEffect` (core) |
 | `useAsyncLayoutEffect`    | `setupLayoutEffect` (core)    |
