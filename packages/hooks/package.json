@@ -30,7 +30,8 @@
     "fix": "eslint --fix .",
     "lint": "eslint .",
     "test": "tsc --noEmit -p tsconfig.test.json && vitest --typecheck --run",
-    "test:watch": "vitest --typecheck"
+    "test:watch": "vitest --typecheck",
+    "version": "npm version"
   },
   "devDependencies": {},
   "peerDependencies": {

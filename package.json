@@ -1,6 +1,6 @@
 {
   "name": "react-setup",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -22,7 +22,11 @@
     "lint": "run-p -c lint:**",
     "lint:root": "eslint .",
     "lint:workspaces": "npm run --workspaces lint",
-    "test": "npm run --workspaces test"
+    "test": "npm run --workspaces test",
+    "versions": "run-s \"versions:* -- {1}\" --",
+    "versions:core": "npm run version --workspace=@react-setup/core",
+    "versions:hooks": "npm run version --workspace=@react-setup/hooks",
+    "versions:root": "git add packages/*/package.json package-lock.json && git commit -m \"Update versions\" && npm version"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
