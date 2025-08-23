@@ -27,6 +27,7 @@ export {
   createWritableRef,
 } from './utils/createWritableRef';
 export * from './utils/isRef';
+export * from './utils/isStrictRef';
 export * from './utils/isWritableRef';
 export * from './utils/unref';
 
