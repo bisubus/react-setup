@@ -1,8 +1,8 @@
 {
   "name": "@react-setup/hooks",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Easy initialization logic for React functional components, just like in Vue, Solid and Svelte",
+  "keywords": ["react", "reactjs", "react-component", "react-components", "react-hooks", "setup", "typescript"],
   "author": "bisubus",
   "license": "MIT",
   "repository": {
