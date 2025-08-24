@@ -17,51 +17,51 @@ import { isThenable } from './_utils/_isThenable';
 import type { TFn, TMaybePromise, TReadonlyRef } from './_utils/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-type TSetupComponentRenderFn<PProps> = <PProps>(props?: PProps) => ReactNode;
+type TSetupRenderFn<PProps> = <PProps>(props: PProps) => ReactNode;
 
 type TSetupComponent<PProps = object> = ((
   props: PProps,
-) => TMaybePromise<TSetupComponentRenderFn<PProps>>) & {
+) => TMaybePromise<TSetupRenderFn<PProps>>) & {
   displayName?: string | undefined;
 };
 
 type TMemoCompareFn = <TProps>(prevProps: Readonly<TProps>, nextProps: Readonly<TProps>) => boolean;
 
-interface ISetupComponentOptions {
+interface ISetupComponentOptions<PProps> {
   name?: string;
-  async?: boolean;
+  suspense?: boolean | TSetupRenderFn<PProps>;
   memo?: boolean | TMemoCompareFn;
   propsRef?: boolean;
 }
 
 export function setupComponent<
   PProps extends object,
-  POptions extends ISetupComponentOptions = ISetupComponentOptions,
+  POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
 >(
   setupFn: TSetupComponent<TReadonlyRef<PProps>>,
   options: POptions & { propsRef: true; memo: true | TMemoCompareFn },
 ): NamedExoticComponent<PProps>;
 export function setupComponent<
   PProps extends object,
-  POptions extends ISetupComponentOptions = ISetupComponentOptions,
+  POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
 >(
   setupFn: TSetupComponent<TReadonlyRef<PProps>>,
   options: POptions & { propsRef: true },
 ): FunctionComponent<PProps>;
 export function setupComponent<
   PProps extends object,
-  POptions extends ISetupComponentOptions = ISetupComponentOptions,
+  POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
 >(
   setupFn: TSetupComponent<Readonly<PProps>>,
   options: POptions & { memo: true | TMemoCompareFn },
 ): NamedExoticComponent<PProps>;
 export function setupComponent<
   PProps extends object,
-  POptions extends ISetupComponentOptions = ISetupComponentOptions,
+  POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
 >(setupFn: TSetupComponent<Readonly<PProps>>, options?: POptions): FunctionComponent<PProps>;
 export function setupComponent<
   PProps extends object,
-  POptions extends ISetupComponentOptions,
+  POptions extends ISetupComponentOptions<PProps>,
   PReadonlyProps extends Readonly<PProps> | TReadonlyRef<PProps>,
 >(
   setupFn: TSetupComponent<PReadonlyProps>,
@@ -69,7 +69,7 @@ export function setupComponent<
 ): FunctionComponent<PProps> | NamedExoticComponent<PProps> {
   // Ensure the options aren't changed throughout the component lifecycle
   const isPropsRef = options.propsRef;
-  const isAsync = options.async;
+  const suspense = options.suspense;
   const componentName = options.name || setupFn.displayName || setupFn.name;
 
   function SetupComponent(props: PProps) {
@@ -98,8 +98,8 @@ export function setupComponent<
         setupHooksQueue.current = null;
       }
 
-      let renderFn!: TSetupComponentRenderFn<PProps>;
-      const isRenderComponent = isAsync || isThenable(result);
+      let renderFn!: TSetupRenderFn<PProps>;
+      const isRenderComponent = !!suspense || isThenable(result);
 
       if (isRenderComponent) {
         const renderFnPromise = Promise.resolve(result);
@@ -115,17 +115,22 @@ export function setupComponent<
         }
 
         renderFn = ((props: PProps) => {
-          /*
-          return (
-            <Suspense>
-              <RenderComponent {...props} />
-            </Suspense>
-          );
-*/
-          return h(Suspense, null, h(RenderComponent, props));
-        }) as TSetupComponentRenderFn<PProps>;
+          if (typeof suspense === 'function') {
+            const node: ReactNode = suspense({ ...props, children: h(RenderComponent, props) });
+            return node;
+          } else {
+            /*
+            return (
+              <Suspense>
+                <RenderComponent {...props} />
+              </Suspense>
+            );
+            */
+            return h(Suspense, null, h(RenderComponent, props));
+          }
+        }) as TSetupRenderFn<PProps>;
       } else {
-        renderFn = result as TSetupComponentRenderFn<PProps>;
+        renderFn = result as TSetupRenderFn<PProps>;
       }
 
       return renderFn;
