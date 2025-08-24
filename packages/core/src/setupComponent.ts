@@ -1,9 +1,12 @@
 import {
   createElement as h,
+  forwardRef,
   type FunctionComponent,
   memo,
   type NamedExoticComponent,
+  type PropsWithoutRef,
   type ReactNode,
+  type Ref,
   Suspense,
   useRef,
 } from 'react';
@@ -31,9 +34,24 @@ interface ISetupComponentOptions<PProps> {
   name?: string;
   suspense?: boolean | TSetupRenderFn<PProps>;
   memo?: boolean | TMemoCompareFn;
+  forwardRef?: boolean;
   propsRef?: boolean;
 }
 
+export function setupComponent<
+  PProps extends object,
+  POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
+>(
+  setupFn: TSetupComponent<TReadonlyRef<PProps>>,
+  options: POptions & { forwardRef: true; propsRef: true },
+): NamedExoticComponent<PProps>;
+export function setupComponent<
+  PProps extends object,
+  POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
+>(
+  setupFn: TSetupComponent<Readonly<PProps>>,
+  options: POptions & { forwardRef: true },
+): NamedExoticComponent<PProps>;
 export function setupComponent<
   PProps extends object,
   POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
@@ -45,16 +63,16 @@ export function setupComponent<
   PProps extends object,
   POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
 >(
-  setupFn: TSetupComponent<TReadonlyRef<PProps>>,
-  options: POptions & { propsRef: true },
-): FunctionComponent<PProps>;
+  setupFn: TSetupComponent<Readonly<PProps>>,
+  options: POptions & { memo: true | TMemoCompareFn },
+): NamedExoticComponent<PProps>;
 export function setupComponent<
   PProps extends object,
   POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
 >(
-  setupFn: TSetupComponent<Readonly<PProps>>,
-  options: POptions & { memo: true | TMemoCompareFn },
-): NamedExoticComponent<PProps>;
+  setupFn: TSetupComponent<TReadonlyRef<PProps>>,
+  options: POptions & { propsRef: true },
+): FunctionComponent<PProps>;
 export function setupComponent<
   PProps extends object,
   POptions extends ISetupComponentOptions<PProps> = ISetupComponentOptions<PProps>,
@@ -68,17 +86,24 @@ export function setupComponent<
   options: POptions = {} as POptions,
 ): FunctionComponent<PProps> | NamedExoticComponent<PProps> {
   // Ensure the options aren't changed throughout the component lifecycle
+  const isForwardRef = options.forwardRef;
   const isPropsRef = options.propsRef;
   const suspense = options.suspense;
   const componentName = options.name || setupFn.displayName || setupFn.name;
 
-  function SetupComponent(props: PProps) {
+  function SetupComponent(props: PProps, ref?: Ref<unknown>): ReactNode {
     let constProps!: Readonly<PProps> | TReadonlyRef<PProps>;
 
+    let mergedProps = props;
+
+    if (isForwardRef) {
+      mergedProps = { ...props, ref };
+    }
+
     if (isPropsRef) {
-      constProps = useSyncRef(props);
+      constProps = useSyncRef(mergedProps);
     } else {
-      constProps = useConstProps(props);
+      constProps = useConstProps(mergedProps);
     }
 
     const hooksQueueRef = useRef<TFn[] | null>(null);
@@ -151,18 +176,23 @@ export function setupComponent<
     SetupComponent.displayName = componentName;
   }
 
-  if (options.memo) {
-    // Display name of a memoized component is shown by default in React devtools with "memo" label
-    let MemoComponent: NamedExoticComponent<PProps>;
+  let WrapperComponent: FunctionComponent<PProps> | NamedExoticComponent<PProps> = SetupComponent;
 
-    if (typeof options.memo === 'function') {
-      MemoComponent = memo(SetupComponent, options.memo);
-    } else {
-      MemoComponent = memo(SetupComponent);
-    }
-
-    return MemoComponent;
-  } else {
-    return SetupComponent;
+  // Exotic components inherit display name in React devtools and are shown with "memo" and "forwardRef" labels
+  if (isForwardRef) {
+    // eslint-disable-next-line react-x/no-forward-ref
+    WrapperComponent = forwardRef(
+      SetupComponent as (props: PropsWithoutRef<PProps>, ref: Ref<unknown>) => ReactNode,
+    ) as NamedExoticComponent<PProps>;
   }
+
+  if (options.memo) {
+    if (typeof options.memo === 'function') {
+      WrapperComponent = memo(SetupComponent, options.memo);
+    } else {
+      WrapperComponent = memo(SetupComponent);
+    }
+  }
+
+  return WrapperComponent;
 }
